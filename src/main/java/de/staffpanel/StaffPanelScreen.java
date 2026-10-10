@@ -27,10 +27,10 @@ public class StaffPanelScreen extends Screen {
     @Override
     protected void init() {
         playerButtons.clear();
-        int panelWidth = Math.min(440, this.width - 24);
+        int panelWidth = Math.min(680, this.width - 24);
         int left = (this.width - panelWidth) / 2;
         int rightColumn = left + panelWidth / 2 + 8;
-        int rightWidth = this.width - 12 - rightColumn;
+        int rightWidth = left + panelWidth - 8 - rightColumn;
 
         listTop = 78;
         listBottom = this.height - 48;
