@@ -129,7 +129,7 @@ public class StaffPanelScreen extends Screen {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
         mc.player.connection.sendCommand(command);
-        mc.setScreen(null);
+        mc.gui.setScreen(null);
     }
 
     @Override public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
