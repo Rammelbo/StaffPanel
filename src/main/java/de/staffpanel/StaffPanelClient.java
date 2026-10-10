@@ -2,10 +2,10 @@ package de.staffpanel;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import com.mojang.blaze3d.platform.InputConstants;
 
 public class StaffPanelClient implements ClientModInitializer {
@@ -14,18 +14,19 @@ public class StaffPanelClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         KeyMapping.Category category = KeyMapping.Category.register(
-            ResourceLocation.fromNamespaceAndPath("staffpanel", "main")
+            Identifier.fromNamespaceAndPath("staffpanel", "main")
         );
-        openPanel = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+        openPanel = KeyMappingHelper.registerKeyMapping(new KeyMapping(
             "key.staffpanel.open",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_F6,
             category
         ));
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openPanel.consumeClick()) {
                 if (client.player != null) {
-                    client.setScreen(new StaffPanelScreen());
+                    client.gui.setScreen(new StaffPanelScreen());
                 }
             }
         });
