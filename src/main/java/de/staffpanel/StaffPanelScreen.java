@@ -185,16 +185,16 @@ public class StaffPanelScreen extends Screen {
         g.text(font, Component.literal("UUID: —"), rightX + 20, listY + 62, 0xFF7896C0, false);
         g.text(font, Component.literal("IP:   —"), rightX + 20, listY + 82, 0xFF7896C0, false);
 
-        g.text(font, Component.literal("ϟ  Aktionen"), rightX + 20, listY + 118, 0xFF78CFFF, true);
+        g.text(font, Component.literal("ϟ  Aktionen"), rightX + 20, listY + 116, 0xFF78CFFF, true);
         drawAction(g, x, actionY, half, actionH, 0xFF6C2537, 0xFFFF5368, "⚠  Warnen", "Spieler eine Warnung senden");
         drawAction(g, x + half + 12, actionY, half, actionH, 0xFF49321C, 0xFFFFB02E, "➜  Kicken", "Spieler vom Server kicken");
         drawAction(g, x, actionY + actionH + actionGap, half, actionH, 0xFF612333, 0xFFFF5368, "⊘  Bannen", "Spieler dauerhaft bannen");
         drawAction(g, x + half + 12, actionY + actionH + actionGap, half, actionH, 0xFF103F3B, 0xFF00E5A0, "✓  Entbannen", "Spieler vom Bann entfernen");
         drawAction(g, x, actionY + (actionH + actionGap) * 2, half, actionH, 0xFF352054, 0xFFB14DFF, "◷  Timeout", "Spieler temporär stumm schalten");
 
-        g.text(font, Component.literal("Zusätzliche Informationen"), rightX + 20, listY + 222 + actionH * 3 + actionGap * 2 + 8, 0xFF9BC7FF, true);
-        g.text(font, Component.literal("Letzter Login: —"), rightX + 20, listY + 222 + actionH * 3 + actionGap * 2 + 26, 0xFF8AAAD5, false);
-        g.text(font, Component.literal("Spielzeit: —     Rang: —"), rightX + 20, listY + 222 + actionH * 3 + actionGap * 2 + 42, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("Zusätzliche Informationen"), rightX + 20, actionY + actionH * 3 + actionGap * 2 + 40, 0xFF9BC7FF, true);
+        g.text(font, Component.literal("Letzter Login: —"), rightX + 20, actionY + actionH * 3 + actionGap * 2 + 58, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("Spielzeit: —     Rang: —"), rightX + 20, actionY + actionH * 3 + actionGap * 2 + 76, 0xFF8AAAD5, false);
 
         g.fill(panelX + 1, footerY, panelX + panelW - 1, panelY + panelH - 1, 0xFF071225);
         g.fill(panelX + 1, footerY, panelX + panelW - 1, footerY + 1, 0xFF1A3557);
