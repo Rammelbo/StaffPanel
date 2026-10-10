@@ -41,17 +41,17 @@ public class StaffPanelScreen extends Screen {
         rightX = listX + listW + gap;
         rightW = panelX + panelW - pad - rightX;
 
-        int searchY = listY + 58;
-        search = new EditBox(font, listX + 12, searchY, listW - 24, 36, Component.literal("Spieler suchen"));
+        int searchY = listY + 40;
+        search = new EditBox(font, listX + 12, searchY, listW - 24, 26, Component.literal("Spieler suchen"));
         search.setHint(Component.literal("⌕  Spieler suchen ..."));
         addRenderableWidget(search);
 
         int formX = rightX + 18;
         int formW = rightW - 36;
-        reason = new EditBox(font, formX, listY + 184, formW, 34, Component.literal("Grund"));
+        reason = new EditBox(font, formX, listY + 118, formW, 24, Component.literal("Grund"));
         reason.setHint(Component.literal("Grund der Maßnahme"));
         addRenderableWidget(reason);
-        duration = new EditBox(font, formX, listY + 258, formW, 34, Component.literal("Dauer"));
+        duration = new EditBox(font, formX, listY + 170, formW, 24, Component.literal("Dauer"));
         duration.setHint(Component.literal("z. B. 1h"));
         addRenderableWidget(duration);
 
@@ -166,35 +166,35 @@ public class StaffPanelScreen extends Screen {
         g.text(font, Component.literal("↻"), listX + listW - 42, listY + 17, 0xFF80C9FF, true);
 
         List<String> shown = filteredPlayers();
-        int rowY = listY + 104, rowH = 68;
+        int rowY = listY + 76, rowH = 32;
         for (int i = 0; i < shown.size(); i++) {
             int y = rowY + i * (rowH + 8);
             if (y + rowH > listBottom - 12) break;
             boolean selected = shown.get(i).equals(selectedPlayer);
             g.fill(listX + 8, y, listX + listW - 8, y + rowH, selected ? 0xFF10345D : 0xFF0B1B30);
             g.fill(listX + 8, y, listX + 11, y + rowH, selected ? 0xFF12A8FF : 0xFF172A43);
-            g.text(font, Component.literal("●  " + shown.get(i)), listX + 24, y + 15, selected ? 0xFFFFFFFF : 0xFFE1ECFC, true);
-            g.text(font, Component.literal("Online  •  Spieler auswählen"), listX + 42, y + 39, 0xFF5CAFFF, false);
-            g.text(font, Component.literal("›"), listX + listW - 30, y + 21, 0xFF78BFFF, true);
+            g.text(font, Component.literal("●  " + shown.get(i)), listX + 24, y + 6, selected ? 0xFFFFFFFF : 0xFFE1ECFC, true);
+            g.text(font, Component.literal("Online  •  Spieler auswählen"), listX + 24, y + 20, 0xFF5CAFFF, false);
+            g.text(font, Component.literal("›"), listX + listW - 30, y + 9, 0xFF78BFFF, true);
         }
 
         String chosen = selectedPlayer == null ? "Kein Spieler ausgewählt" : selectedPlayer;
         g.text(font, Component.literal("▣  " + chosen), rightX + 20, listY + 18, selectedPlayer == null ? 0xFFFFC66D : 0xFFF2F7FF, true);
         g.text(font, Component.literal("● Online"), rightX + rightW - 88, listY + 18, 0xFF32E99A, false);
-        g.text(font, Component.literal("Online seit: —"), rightX + 20, listY + 49, 0xFF8BB9EF, false);
-        g.text(font, Component.literal("UUID: —"), rightX + 20, listY + 72, 0xFF7896C0, false);
-        g.text(font, Component.literal("IP:   —"), rightX + 20, listY + 94, 0xFF7896C0, false);
+        g.text(font, Component.literal("Online seit: —"), rightX + 20, listY + 42, 0xFF8BB9EF, false);
+        g.text(font, Component.literal("UUID: —"), rightX + 20, listY + 62, 0xFF7896C0, false);
+        g.text(font, Component.literal("IP:   —"), rightX + 20, listY + 82, 0xFF7896C0, false);
 
-        g.text(font, Component.literal("ϟ  Aktionen"), rightX + 20, listY + 184, 0xFF78CFFF, true);
+        g.text(font, Component.literal("ϟ  Aktionen"), rightX + 20, listY + 118, 0xFF78CFFF, true);
         drawAction(g, x, actionY, half, actionH, 0xFF6C2537, 0xFFFF5368, "⚠  Warnen", "Spieler eine Warnung senden");
         drawAction(g, x + half + 12, actionY, half, actionH, 0xFF49321C, 0xFFFFB02E, "➜  Kicken", "Spieler vom Server kicken");
         drawAction(g, x, actionY + actionH + actionGap, half, actionH, 0xFF612333, 0xFFFF5368, "⊘  Bannen", "Spieler dauerhaft bannen");
         drawAction(g, x + half + 12, actionY + actionH + actionGap, half, actionH, 0xFF103F3B, 0xFF00E5A0, "✓  Entbannen", "Spieler vom Bann entfernen");
         drawAction(g, x, actionY + (actionH + actionGap) * 2, half, actionH, 0xFF352054, 0xFFB14DFF, "◷  Timeout", "Spieler temporär stumm schalten");
 
-        g.text(font, Component.literal("Zusätzliche Informationen"), rightX + 20, listY + 168 + actionH * 3 + actionGap * 2 + 76, 0xFF9BC7FF, true);
-        g.text(font, Component.literal("Letzter Login: —"), rightX + 20, listY + 168 + actionH * 3 + actionGap * 2 + 100, 0xFF8AAAD5, false);
-        g.text(font, Component.literal("Spielzeit: —     Rang: —"), rightX + 20, listY + 168 + actionH * 3 + actionGap * 2 + 122, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("Zusätzliche Informationen"), rightX + 20, listY + 222 + actionH * 3 + actionGap * 2 + 8, 0xFF9BC7FF, true);
+        g.text(font, Component.literal("Letzter Login: —"), rightX + 20, listY + 222 + actionH * 3 + actionGap * 2 + 26, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("Spielzeit: —     Rang: —"), rightX + 20, listY + 222 + actionH * 3 + actionGap * 2 + 42, 0xFF8AAAD5, false);
 
         g.fill(panelX + 1, footerY, panelX + panelW - 1, panelY + panelH - 1, 0xFF071225);
         g.fill(panelX + 1, footerY, panelX + panelW - 1, footerY + 1, 0xFF1A3557);
