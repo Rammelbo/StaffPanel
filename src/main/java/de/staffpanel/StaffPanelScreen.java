@@ -68,15 +68,15 @@ public class StaffPanelScreen extends Screen {
         searchY = listY + 38;
         rowY = searchY + 36;
         rowH = Math.max(36, Math.min(52, (contentBottom - rowY - 10) / 7));
-        profileBottom = listY + Math.max(82, Math.min(104, (contentBottom - listY) / 5));
+        profileBottom = listY + Math.max(72, Math.min(92, (contentBottom - listY) / 5));
         actionsTop = profileBottom + 10;
-        actionsBottom = contentBottom - Math.max(86, Math.min(108, (contentBottom - listY) / 5)) - 10;
+        actionsBottom = contentBottom - Math.max(58, Math.min(72, (contentBottom - listY) / 5)) - 8;
         infoTop = actionsBottom + 10;
         actionX = rightX + 12;
         actionW = rightW - 24;
         actionGap = 10;
         actionColW = (actionW - actionGap) / 2;
-        actionH = Math.max(48, Math.min(66, (actionsBottom - actionsTop - 42) / 3));
+        actionH = Math.max(34, Math.min(66, (actionsBottom - actionsTop - 42) / 3));
     }
 
     private void refreshPlayers() {
@@ -287,7 +287,7 @@ public class StaffPanelScreen extends Screen {
         boolean hover = mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
         g.fill(x, y, x + w, y + h, accent);
         g.fill(x + 2, y + 2, x + w - 2, y + h - 2, hover ? brighten(bg) : bg);
-        g.fill(x + 10, y + 9, x + 42, y + h - 9, 0x332FFFFFF);
+        g.fill(x + 10, y + 9, x + 42, y + h - 9, 0x332F3F55);
         g.text(font, Component.literal(title), x + 50, y + 10, accent, true);
         if (h >= 56) g.text(font, Component.literal(subtitle), x + 50, y + h - 20, 0xFFD0D9EA, false);
     }
