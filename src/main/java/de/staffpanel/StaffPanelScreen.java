@@ -66,7 +66,7 @@ public class StaffPanelScreen extends Screen {
                 names.add(info.getProfile().name());
             }
         }
-        names.sort(Comparator.comparing(String::toLowerCase));
+        names.sort(Comparator.comparing(name -> name.toLowerCase(java.util.Locale.ROOT)));
 
         int rowY = listTop;
         int rowHeight = 22;
@@ -107,7 +107,7 @@ public class StaffPanelScreen extends Screen {
         }
 
         mc.player.connection.sendCommand(full.substring(1));
-        mc.setScreen(null);
+        mc.gui.setScreen(null);
     }
 
     @Override
