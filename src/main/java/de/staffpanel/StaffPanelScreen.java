@@ -35,24 +35,24 @@ public class StaffPanelScreen extends Screen {
         listTop = 78;
         listBottom = this.height - 48;
 
-        reason = new EditBox(this.font, rightColumn, 105, rightWidth, 20, Component.literal("Grund"));
+        reason = new EditBox(this.font, rightColumn + 8, 137, rightWidth, 24, Component.literal("Grund"));
         reason.setHint(Component.literal("Grund der Maßnahme"));
         addRenderableWidget(reason);
 
-        duration = new EditBox(this.font, rightColumn, 151, rightWidth, 20, Component.literal("Dauer"));
+        duration = new EditBox(this.font, rightColumn + 8, 185, rightWidth, 24, Component.literal("Dauer"));
         duration.setHint(Component.literal("z. B. 1h"));
         addRenderableWidget(duration);
 
         addRenderableWidget(Button.builder(Component.literal("Warnen"), b -> sendCommand("/warn"))
-            .bounds(rightColumn, 190, rightWidth, 20).build());
+            .bounds(rightColumn + 8, 224, rightWidth, 26).build());
         addRenderableWidget(Button.builder(Component.literal("Kicken"), b -> sendCommand("/kick"))
-            .bounds(rightColumn, 215, rightWidth, 20).build());
+            .bounds(rightColumn + 8, 256, rightWidth, 26).build());
         addRenderableWidget(Button.builder(Component.literal("Bannen"), b -> sendCommand("/ban"))
-            .bounds(rightColumn, 240, rightWidth, 20).build());
+            .bounds(rightColumn + 8, 288, rightWidth, 26).build());
         addRenderableWidget(Button.builder(Component.literal("Entbannen"), b -> sendCommand("/pardon"))
-            .bounds(rightColumn, 265, rightWidth, 20).build());
+            .bounds(rightColumn + 8, 320, rightWidth, 26).build());
         addRenderableWidget(Button.builder(Component.literal("Timeout"), b -> sendCommand("/timeout"))
-            .bounds(rightColumn, 290, rightWidth, 20).build());
+            .bounds(rightColumn + 8, 352, rightWidth, 26).build());
         addRenderableWidget(Button.builder(Component.literal("Schließen"), b -> onClose())
             .bounds(rightColumn, this.height - 35, rightWidth, 20).build());
 
