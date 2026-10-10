@@ -71,14 +71,16 @@ public class StaffPanelScreen extends Screen {
         profileBottom = listY + Math.max(100, Math.min(116, (contentBottom - listY) / 4));
         actionsTop = profileBottom + 10;
         // Reserve a dedicated information strip at the bottom; action cards must never overlap it.
-        int infoHeight = Math.max(58, Math.min(76, (contentBottom - listY) / 7));
+        int infoHeight = Math.max(52, Math.min(66, (contentBottom - listY) / 8));
         infoTop = contentBottom - infoHeight;
-        actionsBottom = infoTop - 10;
+        actionsBottom = infoTop - 12;
         actionX = rightX + 12;
         actionW = rightW - 24;
         actionGap = 10;
         actionColW = (actionW - actionGap) / 2;
-        actionH = Math.max(30, Math.min(58, (actionsBottom - actionsTop - 42) / 3));
+        // Three rows plus title and gaps must fit strictly above the information card.
+        int availableForCards = actionsBottom - (actionsTop + 30) - 16;
+        actionH = Math.max(22, Math.min(58, availableForCards / 3));
     }
 
     private void refreshPlayers() {
@@ -256,9 +258,8 @@ public class StaffPanelScreen extends Screen {
         ay += actionH + 8;
         drawAction(g, ax, ay, actionColW, actionH, 0xFF28183F, 0xFFB14DFF, "◷  Timeout", "Temporär stummschalten", mouseX, mouseY);
 
-        g.text(font, Component.literal("▤  Zusätzliche Informationen"), rightX + 18, infoTop + 8, 0xFF9BC7FF, true);
-        g.text(font, Component.literal("Letzter Login: —"), rightX + 18, infoTop + 25, 0xFF8AAAD5, false);
-        g.text(font, Component.literal("Spielzeit: —      Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 18, infoTop + 42, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("▤  Zusätzliche Informationen"), rightX + 18, infoTop + 7, 0xFF9BC7FF, true);
+        g.text(font, Component.literal("Letzter Login: —   ·   Spielzeit: —   ·   Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 18, infoTop + 27, 0xFF8AAAD5, false);
 
         g.fill(panelX + 1, footerY, panelX + panelW - 1, panelY + panelH - 1, 0xFF071225);
         g.fill(panelX + 1, footerY, panelX + panelW - 1, footerY + 1, 0xFF1A3557);
@@ -291,7 +292,7 @@ public class StaffPanelScreen extends Screen {
         g.fill(x + 2, y + 2, x + w - 2, y + h - 2, hover ? brighten(bg) : bg);
         g.fill(x + 10, y + 9, x + 42, y + h - 9, 0x332F3F55);
         g.text(font, Component.literal(title), x + 50, y + 10, accent, true);
-        if (h >= 56) g.text(font, Component.literal(subtitle), x + 50, y + h - 20, 0xFFD0D9EA, false);
+        if (h >= 48) g.text(font, Component.literal(subtitle), x + 50, y + h - 17, 0xFFD0D9EA, false);
     }
 
     private int brighten(int color) {
