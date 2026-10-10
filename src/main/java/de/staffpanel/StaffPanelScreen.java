@@ -3,6 +3,7 @@ package de.staffpanel;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -17,47 +18,57 @@ public class StaffPanelScreen extends Screen {
     private EditBox duration;
     private String selectedPlayer;
     private final List<Button> playerButtons = new ArrayList<>();
-    private int listTop;
-    private int listBottom;
+    private int panelLeft, panelTop, panelWidth, panelHeight;
+    private int contentTop, leftX, rightX, leftWidth, rightWidth;
 
     public StaffPanelScreen() {
-        super(Component.literal("StaffPanel"));
+        super(Component.literal("Staff Panel"));
     }
 
     @Override
     protected void init() {
         playerButtons.clear();
-        int panelWidth = Math.min(980, this.width - 32);
-        int left = (this.width - panelWidth) / 2;
-        int rightColumn = left + 350;
-        int rightWidth = left + panelWidth - 32 - rightColumn;
 
-        listTop = 112;
-        listBottom = this.height - 58;
+        panelWidth = Math.min(720, this.width - 24);
+        panelHeight = Math.min(420, this.height - 16);
+        panelLeft = (this.width - panelWidth) / 2;
+        panelTop = (this.height - panelHeight) / 2;
+        contentTop = panelTop + 76;
 
-        reason = new EditBox(this.font, rightColumn + 12, 146, rightWidth, 24, Component.literal("Grund"));
+        int gap = 12;
+        leftX = panelLeft + 12;
+        leftWidth = Math.min(286, (panelWidth - 36) / 2);
+        rightX = leftX + leftWidth + gap;
+        rightWidth = panelLeft + panelWidth - 12 - rightX;
+
+        int inputX = rightX + 10;
+        int inputWidth = rightWidth - 20;
+        reason = new EditBox(this.font, inputX, contentTop + 82, inputWidth, 20, Component.literal("Grund"));
         reason.setHint(Component.literal("Grund der Maßnahme"));
         addRenderableWidget(reason);
 
-        duration = new EditBox(this.font, rightColumn + 12, 198, rightWidth, 24, Component.literal("Dauer"));
+        duration = new EditBox(this.font, inputX, contentTop + 126, inputWidth, 20, Component.literal("Dauer"));
         duration.setHint(Component.literal("z. B. 1h"));
         addRenderableWidget(duration);
 
+        int actionTop = contentTop + 160;
+        int actionGap = 6;
+        int actionWidth = (inputWidth - actionGap) / 2;
         addRenderableWidget(Button.builder(Component.literal("Warnen"), b -> sendCommand("/warn"))
-            .bounds(rightColumn + 12, 238, rightWidth, 26).build());
+            .bounds(inputX, actionTop, actionWidth, 24).build());
         addRenderableWidget(Button.builder(Component.literal("Kicken"), b -> sendCommand("/kick"))
-            .bounds(rightColumn + 12, 274, rightWidth, 26).build());
+            .bounds(inputX + actionWidth + actionGap, actionTop, actionWidth, 24).build());
         addRenderableWidget(Button.builder(Component.literal("Bannen"), b -> sendCommand("/ban"))
-            .bounds(rightColumn + 12, 310, rightWidth, 26).build());
+            .bounds(inputX, actionTop + 30, actionWidth, 24).build());
         addRenderableWidget(Button.builder(Component.literal("Entbannen"), b -> sendCommand("/pardon"))
-            .bounds(rightColumn + 12, 346, rightWidth, 26).build());
+            .bounds(inputX + actionWidth + actionGap, actionTop + 30, actionWidth, 24).build());
         addRenderableWidget(Button.builder(Component.literal("Timeout"), b -> sendCommand("/timeout"))
-            .bounds(rightColumn + 12, 382, rightWidth, 26).build());
-        addRenderableWidget(Button.builder(Component.literal("Schließen"), b -> onClose())
-            .bounds(rightColumn + 12, this.height - 42, rightWidth, 26).build());
+            .bounds(inputX, actionTop + 60, inputWidth, 24).build());
 
-        addRenderableWidget(Button.builder(Component.literal("Liste aktualisieren"), b -> rebuildWidgets())
-            .bounds(left + 12, 78, 300, 26).build());
+        addRenderableWidget(Button.builder(Component.literal("Schließen"), b -> onClose())
+            .bounds(panelLeft + panelWidth - 112, panelTop + panelHeight - 30, 100, 20).build());
+        addRenderableWidget(Button.builder(Component.literal("↻"), b -> rebuildWidgets())
+            .bounds(leftX + leftWidth - 26, contentTop + 2, 22, 20).build());
 
         List<String> names = new ArrayList<>();
         Minecraft mc = Minecraft.getInstance();
@@ -66,20 +77,24 @@ public class StaffPanelScreen extends Screen {
                 names.add(info.getProfile().name());
             }
         }
-        names.sort(Comparator.comparing(name -> name.toLowerCase(java.util.Locale.ROOT)));
+        names.sort(Comparator.comparing(name -> name.toLowerCase(Locale.ROOT)));
 
-        int rowY = listTop;
-        int rowHeight = 34;
-        int maxRows = Math.max(0, (listBottom - listTop) / rowHeight);
+        int listY = contentTop + 30;
+        int rowHeight = 29;
+        int maxRows = Math.max(0, (panelTop + panelHeight - 42 - listY) / rowHeight);
         for (int i = 0; i < Math.min(names.size(), maxRows); i++) {
             String name = names.get(i);
             Button button = Button.builder(
-                Component.literal((name.equals(selectedPlayer) ? "▶ " : "") + name),
+                Component.literal((name.equals(selectedPlayer) ? "●  " : "   ") + name),
                 b -> {
+                    String reasonValue = reason.getValue();
+                    String durationValue = duration.getValue();
                     selectedPlayer = name;
                     rebuildWidgets();
+                    reason.setValue(reasonValue);
+                    duration.setValue(durationValue);
                 })
-                .bounds(left + 12, rowY + i * rowHeight, 300, 28)
+                .bounds(leftX + 4, listY + i * rowHeight, leftWidth - 8, 25)
                 .build();
             playerButtons.add(button);
             addRenderableWidget(button);
@@ -88,9 +103,7 @@ public class StaffPanelScreen extends Screen {
 
     private void sendCommand(String command) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || selectedPlayer == null || selectedPlayer.isBlank()) {
-            return;
-        }
+        if (mc.player == null || selectedPlayer == null || selectedPlayer.isBlank()) return;
 
         String why = reason.getValue().trim();
         String time = duration.getValue().trim();
@@ -105,42 +118,50 @@ public class StaffPanelScreen extends Screen {
                     + (why.isEmpty() ? "" : " " + why);
             default -> { return; }
         }
-
         mc.player.connection.sendCommand(full.substring(1));
         mc.gui.setScreen(null);
     }
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        int panelWidth = Math.min(980, this.width - 32);
-        int left = (this.width - panelWidth) / 2;
-        int rightColumn = left + 330;
+        int pw = Math.min(720, this.width - 24);
+        int ph = Math.min(420, this.height - 16);
+        int pl = (this.width - pw) / 2;
+        int pt = (this.height - ph) / 2;
+        int ct = pt + 76;
+        int lx = pl + 12;
+        int lw = Math.min(286, (pw - 36) / 2);
+        int rx = lx + lw + 12;
 
-        graphics.fill(0, 0, this.width, this.height, 0x70000000);
-        graphics.fill(left - 10, 18, left + panelWidth + 10, this.height - 12, 0xFF081224);
-        graphics.fill(left - 10, 18, left + panelWidth + 10, 70, 0xFF142844);
-        graphics.fill(left - 10, 68, left + panelWidth + 10, 71, 0xFF168BFF);
-        graphics.fill(left, 98, left + 330, this.height - 54, 0xFF101E33);
-        graphics.fill(left + 340, 98, left + panelWidth, this.height - 54, 0xFF101E33);
+        graphics.fill(0, 0, this.width, this.height, 0x99030A16);
+        graphics.fill(pl, pt, pl + pw, pt + ph, 0xFF081326);
+        graphics.fill(pl + 1, pt + 1, pl + pw - 1, pt + ph - 1, 0xFF0A1529);
+        graphics.fill(pl + 1, pt + 1, pl + pw - 1, pt + 55, 0xFF102746);
+        graphics.fill(pl + 1, pt + 53, pl + pw - 1, pt + 56, 0xFF168BFF);
+        graphics.fill(lx, ct, lx + lw, pt + ph - 38, 0xFF0D1B30);
+        graphics.fill(rx, ct, pl + pw - 12, pt + ph - 38, 0xFF0D1B30);
+        graphics.fill(pl, pt, pl + pw, pt + 1, 0xFF397CC5);
+        graphics.fill(pl, pt + ph - 1, pl + pw, pt + ph, 0xFF23466F);
         super.extractRenderState(graphics, mouseX, mouseY, delta);
-        graphics.text(this.font, Component.literal("◆  STAFF PANEL"), left + 8, 29, 0xFFFFFFFF, true);
-        graphics.text(this.font, Component.literal("ONLINE-SPIELER"), left + 12, 108, 0xFF8FCBFF, true);
-        graphics.text(this.font, Component.literal("MODERATIONSAKTIONEN"), rightColumn + 12, 108, 0xFF8FCBFF, true);
+
+        graphics.text(this.font, Component.literal("⬡  STAFF PANEL"), pl + 14, pt + 13, 0xFFF1F7FF, true);
+        graphics.text(this.font, Component.literal("Spieler verwalten und Moderation durchführen"), pl + 14, pt + 32, 0xFF9ABDEB, false);
+        graphics.text(this.font, Component.literal("ONLINE"), pl + pw - 70, pt + 15, 0xFF35E89A, true);
+        graphics.text(this.font, Component.literal("F6 zum Öffnen/Schließen"), pl + pw - 140, pt + 32, 0xFFB8D0F0, false);
+        graphics.text(this.font, Component.literal("Online-Spieler"), lx + 8, ct + 7, 0xFF70C8FF, true);
+        graphics.text(this.font, Component.literal("MODERATIONSAKTIONEN"), rx + 10, ct + 7, 0xFF70C8FF, true);
 
         String chosen = selectedPlayer == null ? "Kein Spieler ausgewählt" : "Ausgewählt: " + selectedPlayer;
-        graphics.text(this.font, Component.literal(chosen), rightColumn + 12, 128,
-            selectedPlayer == null ? 0xFFFFC66D : 0xFF8BE0A5, false);
-        graphics.text(this.font, Component.literal("Grund der Maßnahme"), rightColumn + 12, 136, 0xFFD5DCE8, false);
-        graphics.text(this.font, Component.literal("Dauer (für Timeout)"), rightColumn + 12, 188, 0xFFD5DCE8, false);
+        graphics.text(this.font, Component.literal(chosen), rx + 10, ct + 32,
+            selectedPlayer == null ? 0xFFFFC66D : 0xFF3CE8A0, false);
+        graphics.text(this.font, Component.literal("Grund der Maßnahme"), rx + 10, ct + 61, 0xFFD7E7FF, false);
+        graphics.text(this.font, Component.literal("Dauer (für Timeout)"), rx + 10, ct + 105, 0xFFD7E7FF, false);
 
         Minecraft mc = Minecraft.getInstance();
         int online = mc.getConnection() == null ? 0 : mc.getConnection().getOnlinePlayers().size();
-        graphics.text(this.font, Component.literal("Spieler: " + online), left, this.height - 32, 0xFFADB8C8, false);
-        if (online == 0) {
-            graphics.text(this.font, Component.literal("Keine Spielerliste verfügbar."), left, listTop + 4, 0xFFADB8C8, false);
-        }
+        graphics.text(this.font, Component.literal("Spieler: " + online), pl + 12, pt + ph - 24, 0xFF9DB8DB, false);
         graphics.text(this.font, Component.literal("Server-Befehle und Rechte werden vom Server bestimmt."),
-            left, this.height - 20, 0xFFADB8C8, false);
+            pl + 105, pt + ph - 24, 0xFF7895BB, false);
     }
 
     @Override
