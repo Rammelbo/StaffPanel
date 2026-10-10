@@ -29,8 +29,8 @@ public class StaffPanelScreen extends Screen {
         playerButtons.clear();
         int panelWidth = Math.min(680, this.width - 24);
         int left = (this.width - panelWidth) / 2;
-        int rightColumn = left + panelWidth / 2 + 8;
-        int rightWidth = left + panelWidth - 8 - rightColumn;
+        int rightColumn = left + 330;
+        int rightWidth = left + panelWidth - 24 - rightColumn;
 
         listTop = 78;
         listBottom = this.height - 48;
@@ -57,7 +57,7 @@ public class StaffPanelScreen extends Screen {
             .bounds(rightColumn, this.height - 35, rightWidth, 20).build());
 
         addRenderableWidget(Button.builder(Component.literal("Liste aktualisieren"), b -> rebuildWidgets())
-            .bounds(left, 51, panelWidth / 2 - 4, 20).build());
+            .bounds(left, 51, 300, 24).build());
 
         List<String> names = new ArrayList<>();
         Minecraft mc = Minecraft.getInstance();
@@ -79,7 +79,7 @@ public class StaffPanelScreen extends Screen {
                     selectedPlayer = name;
                     rebuildWidgets();
                 })
-                .bounds(left, rowY + i * rowHeight, panelWidth / 2 - 4, 20)
+                .bounds(left, rowY + i * rowHeight, 300, 26)
                 .build();
             playerButtons.add(button);
             addRenderableWidget(button);
@@ -112,22 +112,26 @@ public class StaffPanelScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
-        int panelWidth = Math.min(440, this.width - 24);
+        int panelWidth = Math.min(980, this.width - 32);
         int left = (this.width - panelWidth) / 2;
-        int rightColumn = left + panelWidth / 2 + 8;
+        int rightColumn = left + 330;
 
-        graphics.fill(left - 8, 18, left + panelWidth + 8, this.height - 12, 0xE8141924);
-        graphics.fill(left - 8, 18, left + panelWidth + 8, 44, 0xFF263449);
-        graphics.text(this.font, Component.literal("STAFF PANEL"), left + 4, 27, 0xFFFFFFFF, true);
-        graphics.text(this.font, Component.literal("ONLINE-SPIELER"), left, 65, 0xFF8FCBFF, true);
-        graphics.text(this.font, Component.literal("AKTIONEN"), rightColumn, 65, 0xFF8FCBFF, true);
+        graphics.fill(0, 0, this.width, this.height, 0x70000000);
+        graphics.fill(left - 10, 18, left + panelWidth + 10, this.height - 12, 0xF0081224);
+        graphics.fill(left - 10, 18, left + panelWidth + 10, 64, 0xFF142844);
+        graphics.fill(left - 10, 62, left + panelWidth + 10, 65, 0xFF168BFF);
+        graphics.fill(left, 72, left + 316, this.height - 46, 0xB0101E33);
+        graphics.fill(left + 326, 72, left + panelWidth, this.height - 46, 0xB0101E33);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        graphics.text(this.font, Component.literal("◆  STAFF PANEL"), left + 8, 29, 0xFFFFFFFF, true);
+        graphics.text(this.font, Component.literal("ONLINE-SPIELER"), left + 8, 82, 0xFF8FCBFF, true);
+        graphics.text(this.font, Component.literal("MODERATIONSAKTIONEN"), rightColumn + 8, 82, 0xFF8FCBFF, true);
 
         String chosen = selectedPlayer == null ? "Kein Spieler ausgewählt" : "Ausgewählt: " + selectedPlayer;
-        graphics.text(this.font, Component.literal(chosen), rightColumn, 83,
+        graphics.text(this.font, Component.literal(chosen), rightColumn + 8, 105,
             selectedPlayer == null ? 0xFFFFC66D : 0xFF8BE0A5, false);
-        graphics.text(this.font, Component.literal("Grund"), rightColumn, 94, 0xFFD5DCE8, false);
-        graphics.text(this.font, Component.literal("Dauer"), rightColumn, 140, 0xFFD5DCE8, false);
+        graphics.text(this.font, Component.literal("Grund der Maßnahme"), rightColumn + 8, 128, 0xFFD5DCE8, false);
+        graphics.text(this.font, Component.literal("Dauer (für Timeout)"), rightColumn + 8, 176, 0xFFD5DCE8, false);
 
         Minecraft mc = Minecraft.getInstance();
         int online = mc.getConnection() == null ? 0 : mc.getConnection().getOnlinePlayers().size();
