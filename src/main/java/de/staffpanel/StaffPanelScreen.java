@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -87,7 +88,10 @@ public class StaffPanelScreen extends Screen {
         mc.gui.setScreen(null);
     }
 
-    @Override public boolean mouseClicked(double mx, double my, int button) {
+    @Override public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mx = event.x();
+        double my = event.y();
+        int button = event.button();
         if (button == 0) {
             int rowY = listY + 104;
             int rowH = 68;
@@ -116,7 +120,7 @@ public class StaffPanelScreen extends Screen {
             if (mx >= panelX + panelW - 164 && my >= footerY && my <= panelY + panelH) { onClose(); return true; }
             if (mx >= listX + listW - 52 && my >= listY + 8 && my <= listY + 48) { refreshPlayers(); return true; }
         }
-        return super.mouseClicked(mx, my, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
