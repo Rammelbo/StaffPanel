@@ -27,7 +27,7 @@ public class StaffPanelScreen extends Screen {
     @Override
     protected void init() {
         playerButtons.clear();
-        int panelWidth = Math.min(680, this.width - 24);
+        int panelWidth = Math.min(980, this.width - 32);
         int left = (this.width - panelWidth) / 2;
         int rightColumn = left + 330;
         int rightWidth = left + panelWidth - 24 - rightColumn;
@@ -57,7 +57,7 @@ public class StaffPanelScreen extends Screen {
             .bounds(rightColumn, this.height - 35, rightWidth, 20).build());
 
         addRenderableWidget(Button.builder(Component.literal("Liste aktualisieren"), b -> rebuildWidgets())
-            .bounds(left, 51, 300, 24).build());
+            .bounds(left + 8, 51, 300, 24).build());
 
         List<String> names = new ArrayList<>();
         Minecraft mc = Minecraft.getInstance();
@@ -69,7 +69,7 @@ public class StaffPanelScreen extends Screen {
         names.sort(Comparator.comparing(name -> name.toLowerCase(java.util.Locale.ROOT)));
 
         int rowY = listTop;
-        int rowHeight = 22;
+        int rowHeight = 30;
         int maxRows = Math.max(0, (listBottom - listTop) / rowHeight);
         for (int i = 0; i < Math.min(names.size(), maxRows); i++) {
             String name = names.get(i);
@@ -79,7 +79,7 @@ public class StaffPanelScreen extends Screen {
                     selectedPlayer = name;
                     rebuildWidgets();
                 })
-                .bounds(left, rowY + i * rowHeight, 300, 26)
+                .bounds(left + 8, rowY + i * rowHeight, 300, 26)
                 .build();
             playerButtons.add(button);
             addRenderableWidget(button);
@@ -117,10 +117,10 @@ public class StaffPanelScreen extends Screen {
         int rightColumn = left + 330;
 
         graphics.fill(0, 0, this.width, this.height, 0x70000000);
-        graphics.fill(left - 10, 18, left + panelWidth + 10, this.height - 12, 0xF0081224);
+        graphics.fill(left - 10, 18, left + panelWidth + 10, this.height - 12, 0xFF081224);
         graphics.fill(left - 10, 18, left + panelWidth + 10, 64, 0xFF142844);
         graphics.fill(left - 10, 62, left + panelWidth + 10, 65, 0xFF168BFF);
-        graphics.fill(left, 72, left + 316, this.height - 46, 0xB0101E33);
+        graphics.fill(left, 72, left + 316, this.height - 46, 0xFF101E33);
         graphics.fill(left + 326, 72, left + panelWidth, this.height - 46, 0xB0101E33);
         super.extractRenderState(graphics, mouseX, mouseY, delta);
         graphics.text(this.font, Component.literal("◆  STAFF PANEL"), left + 8, 29, 0xFFFFFFFF, true);
