@@ -29,10 +29,14 @@ jobs:
       - name: Build mod
         run: gradle build --no-daemon
 
-      - name: Upload JAR
-        if: success()
+      - name: Inspect built mod JAR
+        run: |
+          ls -lh build/libs/
+          jar tf build/libs/staffpanel-*.jar
+
+      - name: Upload mod JAR
         uses: actions/upload-artifact@v4
         with:
           name: staffpanel-jar
-          path: build/libs/*.jar
+          path: build/libs/staffpanel-[0-9]*.jar
           if-no-files-found: error
