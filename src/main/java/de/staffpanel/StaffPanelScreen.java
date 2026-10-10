@@ -68,15 +68,17 @@ public class StaffPanelScreen extends Screen {
         searchY = listY + 38;
         rowY = searchY + 36;
         rowH = Math.max(36, Math.min(52, (contentBottom - rowY - 10) / 7));
-        profileBottom = listY + Math.max(72, Math.min(92, (contentBottom - listY) / 5));
+        profileBottom = listY + Math.max(100, Math.min(116, (contentBottom - listY) / 4));
         actionsTop = profileBottom + 10;
-        actionsBottom = contentBottom - Math.max(58, Math.min(72, (contentBottom - listY) / 5)) - 8;
-        infoTop = actionsBottom + 10;
+        // Reserve a dedicated information strip at the bottom; action cards must never overlap it.
+        int infoHeight = Math.max(58, Math.min(76, (contentBottom - listY) / 7));
+        infoTop = contentBottom - infoHeight;
+        actionsBottom = infoTop - 10;
         actionX = rightX + 12;
         actionW = rightW - 24;
         actionGap = 10;
         actionColW = (actionW - actionGap) / 2;
-        actionH = Math.max(34, Math.min(66, (actionsBottom - actionsTop - 42) / 3));
+        actionH = Math.max(30, Math.min(58, (actionsBottom - actionsTop - 42) / 3));
     }
 
     private void refreshPlayers() {
@@ -254,9 +256,9 @@ public class StaffPanelScreen extends Screen {
         ay += actionH + 8;
         drawAction(g, ax, ay, actionColW, actionH, 0xFF28183F, 0xFFB14DFF, "◷  Timeout", "Temporär stummschalten", mouseX, mouseY);
 
-        g.text(font, Component.literal("▤  Zusätzliche Informationen"), rightX + 18, infoTop + 12, 0xFF9BC7FF, true);
-        g.text(font, Component.literal("Letzter Login: —"), rightX + 18, infoTop + 32, 0xFF8AAAD5, false);
-        g.text(font, Component.literal("Spielzeit: —      Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 18, infoTop + 50, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("▤  Zusätzliche Informationen"), rightX + 18, infoTop + 8, 0xFF9BC7FF, true);
+        g.text(font, Component.literal("Letzter Login: —"), rightX + 18, infoTop + 25, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("Spielzeit: —      Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 18, infoTop + 42, 0xFF8AAAD5, false);
 
         g.fill(panelX + 1, footerY, panelX + panelW - 1, panelY + panelH - 1, 0xFF071225);
         g.fill(panelX + 1, footerY, panelX + panelW - 1, footerY + 1, 0xFF1A3557);
