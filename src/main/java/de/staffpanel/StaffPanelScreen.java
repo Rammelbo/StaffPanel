@@ -68,19 +68,23 @@ public class StaffPanelScreen extends Screen {
         searchY = listY + 38;
         rowY = searchY + 36;
         rowH = Math.max(36, Math.min(52, (contentBottom - rowY - 10) / 7));
-        profileBottom = listY + Math.max(100, Math.min(116, (contentBottom - listY) / 4));
-        actionsTop = profileBottom + 10;
-        // Reserve a dedicated information strip at the bottom; action cards must never overlap it.
-        int infoHeight = Math.max(52, Math.min(66, (contentBottom - listY) / 8));
+        int usableHeight = Math.max(1, contentBottom - listY);
+        int profileHeight = Math.min(112, Math.max(76, usableHeight / 5));
+        profileBottom = listY + profileHeight;
+        actionsTop = profileBottom + 8;
+        // Compact info card and action rows are calculated from the same available space.
+        int infoHeight = Math.min(58, Math.max(38, usableHeight / 8));
         infoTop = contentBottom - infoHeight;
-        actionsBottom = infoTop - 12;
-        actionX = rightX + 12;
-        actionW = rightW - 24;
-        actionGap = 10;
-        actionColW = (actionW - actionGap) / 2;
-        // Three rows plus title and gaps must fit strictly above the information card.
-        int availableForCards = actionsBottom - (actionsTop + 30) - 16;
-        actionH = Math.max(22, Math.min(58, availableForCards / 3));
+        actionsBottom = infoTop - 10;
+        actionX = rightX + 10;
+        actionW = Math.max(1, rightW - 20);
+        actionGap = Math.min(10, Math.max(4, actionW / 30));
+        actionColW = Math.max(1, (actionW - actionGap) / 2);
+        int actionTitleHeight = 24;
+        int gapsBetweenRows = 8;
+        int availableForCards = actionsBottom - (actionsTop + actionTitleHeight) - gapsBetweenRows * 2;
+        // Never force a minimum height that makes the cards spill into the info card/footer.
+        actionH = Math.max(1, Math.min(58, availableForCards / 3));
     }
 
     private void refreshPlayers() {
@@ -167,7 +171,7 @@ public class StaffPanelScreen extends Screen {
                     return true;
                 }
             }
-            int y1 = actionsTop + 30;
+            int y1 = actionsTop + 24;
             int y2 = y1 + actionH + 8;
             int y3 = y2 + actionH + 8;
             if (my >= y1 && my <= y1 + actionH) {
@@ -248,8 +252,8 @@ public class StaffPanelScreen extends Screen {
         g.text(font, Component.literal("UUID: " + selectedUuid()), rightX + 18, listY + 61, 0xFF7896C0, false);
         g.text(font, Component.literal("IP:  —"), rightX + 18, listY + 80, 0xFF7896C0, false);
 
-        g.text(font, Component.literal("ϟ  Aktionen"), rightX + 18, actionsTop + 10, 0xFF78CFFF, true);
-        int ax = actionX, ay = actionsTop + 30;
+        g.text(font, Component.literal("ϟ  Aktionen"), rightX + 18, actionsTop + 6, 0xFF78CFFF, true);
+        int ax = actionX, ay = actionsTop + 24;
         drawAction(g, ax, ay, actionColW, actionH, 0xFF321A2A, 0xFFFF5368, "⚠  Warnen", "Warnung senden", mouseX, mouseY);
         drawAction(g, ax + actionColW + actionGap, ay, actionColW, actionH, 0xFF35291B, 0xFFFFB02E, "➜  Kicken", "Vom Server kicken", mouseX, mouseY);
         ay += actionH + 8;
@@ -258,8 +262,8 @@ public class StaffPanelScreen extends Screen {
         ay += actionH + 8;
         drawAction(g, ax, ay, actionColW, actionH, 0xFF28183F, 0xFFB14DFF, "◷  Timeout", "Temporär stummschalten", mouseX, mouseY);
 
-        g.text(font, Component.literal("▤  Zusätzliche Informationen"), rightX + 18, infoTop + 7, 0xFF9BC7FF, true);
-        g.text(font, Component.literal("Letzter Login: —   ·   Spielzeit: —   ·   Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 18, infoTop + 27, 0xFF8AAAD5, false);
+        g.text(font, Component.literal("▤  Zusätzliche Informationen"), rightX + 12, infoTop + 5, 0xFF9BC7FF, true);
+        if (infoHeight >= 48) g.text(font, Component.literal("Login: —  ·  Spielzeit: —  ·  Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 12, infoTop + 25, 0xFF8AAAD5, false);
 
         g.fill(panelX + 1, footerY, panelX + panelW - 1, panelY + panelH - 1, 0xFF071225);
         g.fill(panelX + 1, footerY, panelX + panelW - 1, footerY + 1, 0xFF1A3557);
