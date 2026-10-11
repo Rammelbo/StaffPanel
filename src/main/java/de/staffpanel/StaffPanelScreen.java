@@ -263,7 +263,7 @@ public class StaffPanelScreen extends Screen {
         drawAction(g, ax, ay, actionColW, actionH, 0xFF28183F, 0xFFB14DFF, "◷  Timeout", "Temporär stummschalten", mouseX, mouseY);
 
         g.text(font, Component.literal("▤  Zusätzliche Informationen"), rightX + 12, infoTop + 5, 0xFF9BC7FF, true);
-        if (infoHeight >= 48) g.text(font, Component.literal("Login: —  ·  Spielzeit: —  ·  Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 12, infoTop + 25, 0xFF8AAAD5, false);
+        if (infoTop - actionsBottom >= 48) g.text(font, Component.literal("Login: —  ·  Spielzeit: —  ·  Rang: " + (selectedPlayer == null ? "—" : "Spieler")), rightX + 12, infoTop + 25, 0xFF8AAAD5, false);
 
         g.fill(panelX + 1, footerY, panelX + panelW - 1, panelY + panelH - 1, 0xFF071225);
         g.fill(panelX + 1, footerY, panelX + panelW - 1, footerY + 1, 0xFF1A3557);
